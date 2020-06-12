@@ -31,7 +31,7 @@ variable "client_app_port" {
 
 variable "client_app_count" {
   description = "Number of docker containers to run"
-  default     = 1
+  default     = 2
 }
 
 variable "client_container_name" {
@@ -86,3 +86,12 @@ variable "db_tls_enabled" {
   description  = "TLS Enabled"
   default      = true
 }
+
+
+
+# Provide the domain of the cert that will be used to looup the certificate.
+variable "cert_ssl_domain" {
+  description  = "DNS of the site. Ex: web.startupsample.ca. The Route53 zone must exist."  
+}
+
+
