@@ -69,9 +69,14 @@ class DynamoDBClient {
           
         var params = {
             TableName: dbName,
+            KeyConditionExpression: "pid = :pid",
+            ExpressionAttributeValues: {
+              ":pid":  "greetings"
+            },
+            ScanIndexForward: false,
             Limit: 10
           };
-        this._docClient.scan(params, function(err, data) {
+        this._docClient.query(params, function(err, data) {
             if (err) {
               console.log("Unable to get item");            
             } else {
@@ -97,6 +102,7 @@ class DynamoDBClient {
       var params = {
         TableName: dbName,
         Item:{
+            "pid": "greetings",
             "id": id,
             "createdAt": currentIsoDate,
             "updatedAt": currentIsoDate,
