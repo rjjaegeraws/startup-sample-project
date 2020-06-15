@@ -7,7 +7,7 @@ const requireHttps = require('./require-https.js');
 const {
   validate, GreetingSchema,
 } = require('./validation.js');
-const { dbClient, collections } = require('./db');
+const {  dynamodbClient } = require('./db');
 const { errorHandler, asyncMiddleware } = require('./error-handler.js');
 const logger = require('./logger.js');
 
@@ -42,26 +42,14 @@ const generateUniqueHexId = async (collection) => {
 // Choose and save greeting
 app.post(`${apiBaseUrl}/greeting`,
   asyncMiddleware(async (req, res) => {
-    const scrubbed = scrubObject(req.body);
-    await validate(GreetingSchema, scrubbed); // Validate submitted form against schema
-    const greetingsCollection = dbClient.db.collection(collections.GREETINGS);
-    const id = await generateUniqueHexId(greetingsCollection);
     
-    const currentIsoDate = new Date().toISOString();
-    const greetingItem = {
-      ...scrubbed,
-      id,
-      createdAt: currentIsoDate,
-      updatedAt: currentIsoDate,
-    };
-
-    logger.info('Saving to db: ' + JSON.stringify(greetingItem));
+    logger.info('Saving to db: ' + JSON.stringify(req.body));
 
     const greeting = req.body["greeting"];
-    await greetingsCollection.insertOne({ 
-      ...greetingItem,
-    });
+    const result = await dynamodbClient.addGreeting(greeting);
+    const id = result.id;
 
+    
     return res.json({ id, greeting});
   }));
 
@@ -70,8 +58,7 @@ app.post(`${apiBaseUrl}/greeting`,
 app.get(`${apiBaseUrl}/greeting/:latest`,
   asyncMiddleware(async (req, res) => {
     
-    const greetingsCollection = dbClient.db.collection(collections.GREETINGS);
-    const greetingItems = await greetingsCollection.find({}, {sort:{$natural:-1}, limit: 10}).toArray();
+    const greetingItems = await dynamodbClient.getGreetings();
     
     logger.info('Reading from db: ' + JSON.stringify(greetingItems));
 

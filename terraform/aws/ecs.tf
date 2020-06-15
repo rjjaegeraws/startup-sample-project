@@ -16,14 +16,9 @@ data "template_file" "sample_app" {
     fargate_cpu       = var.fargate_cpu
     fargate_memory    = var.fargate_memory
     aws_region        = var.aws_region
-    container_name    = var.client_container_name,
-    db_server         = aws_docdb_cluster.docdb.endpoint,
-    db_user           = var.db_masteruser_username,
-    db_port           = var.db_port,
-    db_name           = var.db_name,
-    db_tls            = var.db_tls_enabled,
-    log_group         = aws_cloudwatch_log_group.sample_logs.name,
-    secret_key        = aws_secretsmanager_secret_version.db_user_password.arn
+    container_name    = var.client_container_name,    
+    db_name           = var.db_name,    
+    log_group         = aws_cloudwatch_log_group.sample_logs.name    
   }
 }
 
@@ -54,7 +49,7 @@ resource "aws_ecs_service" "main" {
   network_configuration {
     security_groups  = [aws_security_group.ecs_tasks.id]
     subnets          = aws_subnet.private.*.id
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   load_balancer {
@@ -63,7 +58,7 @@ resource "aws_ecs_service" "main" {
     container_port   = var.client_app_port
   }
 
-  depends_on = [aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role, aws_docdb_cluster_instance.cluster_instances]
+  depends_on = [aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
   
 }

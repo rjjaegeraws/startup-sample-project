@@ -1,6 +1,6 @@
 const app = require('./server.js');
 const logger = require('./logger.js');
-const { dbClient } = require('./db');
+
 
 const port = 80;
 
@@ -37,7 +37,7 @@ process.on('SIGTERM', () => {
 // Start server
 (async () => {
   try {
-    await dbClient.connect();
+    
     server = app.listen(port, async () => {
       logger.info(`Listening on port ${port}`);
     });

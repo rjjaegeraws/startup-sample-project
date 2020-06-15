@@ -31,7 +31,7 @@ variable "client_app_port" {
 
 variable "client_app_count" {
   description = "Number of docker containers to run"
-  default     = 1
+  default     = 2
 }
 
 variable "client_container_name" {
@@ -53,36 +53,8 @@ variable "fargate_memory" {
   default     = "2048"
 }
 
-variable "db_masteruser_username" {
-  description = "DocumentDB master username"
-  default     = "svcdb"
-}
-variable "db_instance_type" {
-  description = "DocumentDB instance type"
-  default     = "db.r5.large"
-}
-
-variable "db_cluster_name" {
-  description = "Name of the cluster"
-  default     = "sample-db"
-}
-
-variable "db_cluster_number_instances" {
-  description = "The number of instances in the cluster"
-  default     = 1
-}
-
-variable "db_port" {
-  description  = "DocumentDB Port"
-  default      = 27017
-}
-
 variable "db_name" {
   description  = "DocumentDB DB Name"
-  default      = "sample"
+  default      = "ssp-greetings"
 }
 
-variable "db_tls_enabled" {
-  description  = "TLS Enabled"
-  default      = true
-}
