@@ -11,7 +11,7 @@ class DynamoDBClient {
   constructor() {
     
     this.db = null;
-    this._docClient = new AWS.DynamoDB.DocumentClient();
+    this._docClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
   }
     
   /**
@@ -114,13 +114,11 @@ class DynamoDBClient {
 
       this._docClient.put(params, function(err, data) {
           if (err) {
-            logger.info("Unable to add item:", err);            
-          } else {
-            console.info("Added item:", JSON.stringify(data, null, 2));
-            resolve(data);
-          }
-          resolve();
-          
+            logger.info("Unable to add item:", err);    
+            resolve();        
+          } else {            
+            resolve(params.Item);
+          }                    
       });      
 
     });
