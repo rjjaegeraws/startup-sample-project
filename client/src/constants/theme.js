@@ -27,8 +27,8 @@ export default createMuiTheme({
   // Colors
   palette: {
     primary: {
-      light: '#003366',
-      main: '#002C71',
+      light: '#F0F0F0',
+      main: '#00AAD2',
     },
     secondary: {
       main: '#FDB913',
